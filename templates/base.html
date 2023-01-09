@@ -10,11 +10,17 @@
 <body>
   <nav class="navbar navbar-light bg-primary justify-content-between ">
     <div class="container">
-      <a href="/" class="navbar-brand text-light">Flash Card</a>
+      <a href="/" class="navbar-brand text-light">Vocab Memorizer</a>
       <ul class="nav navbar-nav flex-row float-right">
         {% if session['user_id'] %}
         <li class="nav-item">
           <a class="nav-link pr-3 text-light" href="/logout">Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link pr-3 text-light" href="/logout">My Cards</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link pr-3 text-light" href="/users/{{session['user_id']}}">Profile</a>
         </li>
         {% else %}
         <li class="nav-item">
@@ -36,6 +42,13 @@
     {% block content %}
     {% endblock %}
   </div>
+  {% if not session['user_id'] %}
+  <div class="container">
+    <h4>New to Vocab Memorizer?</h4>
+    <p>Sign up now to get your own personalized features!</p>
+    <a href="/signup" class="btn btn-primary">Sign up</a>
+  </div>
+  {%endif%}
 
   <script src="https://unpkg.com/jquery"></script>
   <Script Src="script.js"></Script>

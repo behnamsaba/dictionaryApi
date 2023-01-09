@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, flash, request, g
+from flask import Flask, render_template, redirect, session, flash, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User, Word
 from forms import SearchWord, UserForm, LoginForm
@@ -88,12 +88,17 @@ def logout_user():
     flash("Goodbye!", "info")
     return redirect('/login')
 
+@app.route("/users/<int:user_id>")
+def profile(user_id):
+    user=User.query.get_or_404(int(user_id))
+    return render_template('profile.html',user=user)
+
 
 
 @app.route("/")
 def home_page():
     form=SearchWord()
-    return render_template('coder.html')
+    return render_template('homepage.html')
 
 
 @app.route("/api/get-word",methods=['POST'])
