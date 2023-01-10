@@ -8,7 +8,7 @@ import re
 import requests
 import secret
 
-BASE_URL = "https://od-api.oxforddictionaries.com:443/api/v2/entries/en-us/"
+BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
 
 app = Flask(__name__)
@@ -107,30 +107,33 @@ def search():
     user_input = request.json['word']
     # print(user_input['word'])
 
-    api_request = requests.get(BASE_URL+user_input ,headers={"app_id": secret.app_id, "app_key": secret.app_key})
+    api_request = requests.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+user_input)
+
     result = api_request.json()
-    
-    print(result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['shortDefinitions'][0])
-    word=result['id']
-    definitions =  result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['shortDefinitions'][0]
-    audio = result['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][1]['audioFile']
-    # synonym = result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0]['text']
-    synonym= result['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['synonyms']
-    grammer=result['results'][0]['lexicalEntries'][0]['lexicalCategory']['id']
-    examples = result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['examples']
-    pronunciation = result['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling']
 
-    return jsonify({
-        "word": {
-            "word":word,
-            "definitions":definitions,
-            "audio":audio,
-            "synonyms": synonym,
-            "examples":examples,
-            "pronunciation":pronunciation,
-            "grammer":grammer
+    try:
+        word=result[0]['word']
+        audio=result[0]['phonetics'][0]['audio']
+        pronunciation=result[0]['phonetics'][0].get('text','')
+        definition=result[0]['meanings'][0]['definitions'][0]['definition']
+        synonyms=result[0]['meanings'][0]['synonyms']
+        grammer=result[0]['meanings'][0]['partOfSpeech']
+        examples=result[0]['meanings'][0]['definitions'][0].get('example','')
 
-        }
-    })
+        return jsonify({
+            "word": {
+                "word":word,
+                "audio":audio,
+                "pronunciation":pronunciation,
+                "definitions":definition,
+                "synonyms": synonyms,
+                "grammer":grammer,
+                "examples":examples,
+            }
+        })
+
+    except:
+        return result
+
 
 

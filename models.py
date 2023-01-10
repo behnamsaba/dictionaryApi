@@ -25,9 +25,9 @@ class Word(db.Model):
     word = db.Column(db.Text, nullable=False)
     definition=db.Column(db.Text, nullable=False)
     grammer=db.Column(db.Text, nullable=False)
-    example = db.Column(db.Text, nullable=False)
+    example = db.Column(db.Text, nullable=True)
     audio=db.Column(db.Text,nullable=False)
-    pronunciation=db.Column(db.Text)
+    pronunciation=db.Column(db.Text,nullable=True)
     synonym=db.Column(db.Text,nullable=False)
 
 

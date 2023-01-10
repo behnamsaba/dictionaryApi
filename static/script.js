@@ -14,8 +14,19 @@ async function processForm(evt) {
 
 function handleResponse(resp) {
     $("#dictionary-results").empty()
-    $("#dictionary-results").append(`<p>${resp.data.word.definitions}</p>`)
-    
+    if (resp.data.title){
+        $("#dictionary-results").append(`<p>${resp.data.title}</p>`)
+
+    }else{
+        $("#dictionary-results").append(`<p>${resp.data.word.definitions}</p>`)
+        $("#dictionary-results").append(`<p>${resp.data.word.word}</p>`)
+        $("#dictionary-results").append(`<p>${resp.data.word.grammer}</p>`)
+        $("#dictionary-results").append(`<p>${resp.data.word.synonyms}</p>`)
+        $("#dictionary-results").append(`<p>${resp.data.word.examples}</p>`)
+        $("#dictionary-results").append(`<p>${resp.data.word.audio}</p>`)
+        
+    }
+
 
 }
 
