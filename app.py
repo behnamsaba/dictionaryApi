@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, flash, request
+from flask import Flask, render_template, redirect, session, flash, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User, Word
 from forms import SearchWord, UserForm, LoginForm
@@ -97,24 +97,40 @@ def profile(user_id):
 
 @app.route("/")
 def home_page():
-    form=SearchWord()
+    
     return render_template('homepage.html')
 
 
 @app.route("/api/get-word",methods=['POST'])
 def search():
-    user_input = request.form.to_dict()['search'].lower()
+    # user_input = request.form.to_dict()['search'].lower() #if use wtforms instead of actual forms
+    user_input = request.json['word']
+    # print(user_input['word'])
 
-    print(BASE_URL+user_input)
     api_request = requests.get(BASE_URL+user_input ,headers={"app_id": secret.app_id, "app_key": secret.app_key})
     result = api_request.json()
-
     
+    print(result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['shortDefinitions'][0])
+    word=result['id']
+    definitions =  result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['shortDefinitions'][0]
+    audio = result['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][1]['audioFile']
+    # synonym = result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0]['text']
+    synonym= result['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['synonyms']
+    grammer=result['results'][0]['lexicalEntries'][0]['lexicalCategory']['id']
+    examples = result['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['examples']
+    pronunciation = result['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling']
 
+    return jsonify({
+        "word": {
+            "word":word,
+            "definitions":definitions,
+            "audio":audio,
+            "synonyms": synonym,
+            "examples":examples,
+            "pronunciation":pronunciation,
+            "grammer":grammer
 
-    # print(res['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][1]['audioFile'])
-
-    
-    return redirect('/')
+        }
+    })
 
 

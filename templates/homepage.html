@@ -7,13 +7,16 @@
     </h3>
     <hr>
   </div>
-  <div class="Container">
-    <div class="Search-Box">
-        <input type="Text" placeholder="Type The Word Here.." id="Inp-Word"/>
-        <button Id="Search-Btn">Search</button>
-    </div>
-    <div class="result" id="result"></div>
-</div>
+  <form id="dictionary-form">
+    <label for="word"></label>
+    <input id="word" name="word" placeholder="type the world here ...">
+    <button>Search</button>
+  </form>
 
-
-  {% endblock %}
+  <div id="dictionary-results"></div>
+  
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="https://unpkg.com/axios/dist/axios.js"></script>
+  <script src="/static/script.js"></script>
+  
+{% endblock %}
