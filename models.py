@@ -28,7 +28,8 @@ class Word(db.Model):
     example = db.Column(db.Text, nullable=True)
     audio=db.Column(db.Text,nullable=False)
     pronunciation=db.Column(db.Text,nullable=True)
-    synonym=db.Column(db.Text,nullable=False)
+    synonyms=db.Column(db.Text,nullable=True)
+    selection_id=db.Column(db.Integer,db.ForeignKey('selection.id'),nullable=False)
 
 
     user_words = db.relationship('UserWord', backref="user", cascade="all,delete")
@@ -53,6 +54,8 @@ class User(db.Model):
     last_name =db.Column(db.Text, nullable=False)
 
     user_words = db.relationship('UserWord', backref="word", cascade="all,delete")
+
+    user_selection = db.relationship('Selection', backref="user", cascade="all,delete")
 
     @classmethod
     def register(cls, email, pwd, first_name, last_name):
@@ -80,9 +83,28 @@ class User(db.Model):
         else:
             return False
 
+class Selection(db.Model):
+    """Mapping of a selection to a user."""
+    
+    __tablename__ = 'selection'
+
+    def __repr__(self):
+        """show info about users_words"""
+        u = self
+        return f'<selection: name={u.name} user_id={u.user_id}>'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text,nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'),nullable=False)
+
+    selection_word=db.relationship('Word',backref='selection',cascade="all,delete")
+    
+
+
+
 
 class UserWord(db.Model):
-    """Mapping of a playlist to a song."""
+    """Mapping of a user to a word."""
     __tablename__ = 'users_words'
 
     def __repr__(self):

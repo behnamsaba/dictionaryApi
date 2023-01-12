@@ -1,0 +1,101 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+<div class="home-hero">
+    <h1>Flashcard Dictionary</h1>
+    <h3>
+      <small class="text-muted">A flashcard or flash card (also known as an index card) is a card bearing information on both sides, which is intended to be used as an aid in memorization.</small>
+    </h3>
+    <hr>
+  </div>
+
+
+<p class="lead">Make your words meaningful!</p>
+
+<form method="POST" id="dictionary-form">
+
+  {{ form.hidden_tag() }}
+
+  {% for field in form
+    if field.widget.input_type != 'hidden' %}
+  <p>
+    {{ field.label }}
+    {{ field(class_="form-control") }}
+
+    {% for error in field.errors %}
+    <span class="form-text text-danger">{{ error }}</span>
+    {% endfor %}
+  </p>
+  {% endfor %}
+
+  <button class="btn btn-success" type="submit">Search</button>
+
+</form>
+
+
+
+{% if answer %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <audio controls id="sound1" hidden>
+            <source src="{{answer['audio']}}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="document.getElementById('sound1').play();"><i class="bi bi-play" style="font-size: 2rem;"></i></button>
+      <h5 class="card-title">{{answer["word"]}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{answer['grammer']}} | {{answer['pronunciation']}}</h6>
+      <p class="card-text">{{answer['definition']}}</p>
+      <hr>
+      <p class="card-text">{{answer['examples']}}</p>
+      <hr>
+      {%for synonym in answer['synonyms']%}
+          <p>{{ synonym }}</p>
+      {%endfor%}
+      
+
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+      {% if session['user_id'] %}
+      
+      <form method="POST" action="/users/{{session['user_id']}}/card/new">
+
+        {{ form.hidden_tag() }}
+      
+        {% for field in form_selection
+          if field.widget.input_type != 'hidden' %}
+        <p>
+          {{ field.label }}
+          {{ field(class_="form-control") }}
+      
+          {% for error in field.errors %}
+          <span class="form-text text-danger">{{ error }}</span>
+          {% endfor %}
+        </p>
+        {% endfor %}
+      
+        <button class="btn btn-success" type="submit">Save</button>
+      
+      </form>
+      
+      {% endif %}
+    </div>
+  </div>
+
+{%endif%}
+
+
+
+
+
+
+
+
+
+
+<script src="https://unpkg.com/jquery"></script>
+<script src="https://unpkg.com/axios/dist/axios.js"></script>
+<script src="/static/script.js"></script>
+{% endblock %}
+
+
+

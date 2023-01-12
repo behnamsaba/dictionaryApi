@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Available Categories:</h3>
+
+
+<ul>
+    {% for selection in user.user_selection %}
+      <li>
+         <a href="/categories/{{ selection.id }}">{{ selection.name }}</a>
+      </li>
+    {% endfor %}
+    </ul>
+    <hr>
+    <p><a class="btn btn-primary" href="/{{session['user_id']}}/categories/add">Add new cards</a></p>
+
+{% endblock %}
+

@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import InputRequired, Length, DataRequired
 
 class SearchWord(FlaskForm):
     search = StringField("Enter Word", validators=[InputRequired()])
+
+class AddSelection(FlaskForm):
+    name = StringField("Selection Name", validators=[InputRequired()])
 
 class UserForm(FlaskForm):
     first_name=StringField("First Name",validators=[InputRequired(), Length(min= 2, max=30)])
@@ -17,3 +20,5 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
 
+class AllSelection(FlaskForm):
+    selection_list= SelectField('Categories:')

@@ -1,12 +1,11 @@
 from flask import Flask, render_template, redirect, session, flash, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User, Word
-from forms import SearchWord, UserForm, LoginForm
+from models import connect_db, db, User, Word, Selection, UserWord
+from forms import SearchWord, UserForm, LoginForm, AddSelection, AllSelection
 from sqlalchemy.exc import IntegrityError
 import os
 import re
 import requests
-import secret
 
 BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
@@ -93,47 +92,114 @@ def profile(user_id):
     user=User.query.get_or_404(int(user_id))
     return render_template('profile.html',user=user)
 
+##########################################################################################################
+#words routes
 
-
-@app.route("/")
+@app.route("/",methods=["GET","POST"])
 def home_page():
+    form_word=SearchWord()
+    form_selection=AllSelection()
+    if session.get('user_id'):
+        user = User.query.get_or_404(int(session["user_id"]))
+        form_selection.selection_list.choices=[(x.id,x.name) for x in user.user_selection]
+        
     
-    return render_template('homepage.html')
 
+        
 
-@app.route("/api/get-word",methods=['POST'])
-def search():
-    # user_input = request.form.to_dict()['search'].lower() #if use wtforms instead of actual forms
-    user_input = request.json['word']
-    # print(user_input['word'])
+    if form_word.validate_on_submit():
+        user_input=form_word.search.data
+        print(user_input)
+        api_request = requests.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+user_input)
+        result = api_request.json()
 
-    api_request = requests.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+user_input)
-
-    result = api_request.json()
-
-    try:
-        word=result[0]['word']
-        audio=result[0]['phonetics'][0]['audio']
-        pronunciation=result[0]['phonetics'][0].get('text','')
-        definition=result[0]['meanings'][0]['definitions'][0]['definition']
-        synonyms=result[0]['meanings'][0]['synonyms']
-        grammer=result[0]['meanings'][0]['partOfSpeech']
-        examples=result[0]['meanings'][0]['definitions'][0].get('example','')
-
-        return jsonify({
-            "word": {
+        try:
+            word=result[0]['word']
+            audio=result[0]['phonetics'][0]['audio']
+            pronunciation=result[0]['phonetics'][0].get('text','')
+            definition=result[0]['meanings'][0]['definitions'][0]['definition']
+            synonyms=result[0]['meanings'][0]['synonyms']
+            grammer=result[0]['meanings'][0]['partOfSpeech']
+            examples=result[0]['meanings'][0]['definitions'][0].get('example','')
+            answer={
                 "word":word,
                 "audio":audio,
-                "pronunciation":pronunciation,
-                "definitions":definition,
-                "synonyms": synonyms,
+                "definition":definition,
                 "grammer":grammer,
+                "pronunciation":pronunciation,
+                "synonyms":synonyms,
                 "examples":examples,
             }
-        })
+            
+            session['answer']=answer
+            
+        except:
+            pass
 
-    except:
-        return result
+        return render_template('home.html',form=form_word,answer=answer,form_selection=form_selection)
 
+
+    
+
+    return render_template('home.html',form=form_word,form_selection=form_selection)
+
+@app.route('/users/<int:user_id>/card/new',methods=["POST"])
+def add_word(user_id):
+    card_selection = request.form['selection_list']
+    new_word = Word(word=session['answer']['word'], 
+    definition=session['answer']['definition'],
+    grammer=session['answer']['grammer'],
+    example=session['answer']['examples'],
+    audio=session['answer']['audio'],
+    pronunciation=session['answer']['pronunciation'],
+    synonyms=session['answer']['synonyms'],
+    selection_id=card_selection)
+    db.session.add(new_word)
+    db.session.commit()
+    user_words =UserWord(user_id=user_id,word_id=new_word.id)
+    db.session.add(user_words)
+    db.session.commit()
+    flash(f"{new_word.word} Added!", "success")
+    return redirect ('/')
+
+
+
+
+#########################################################################################################
+#category routes
+
+@app.route("/<int:user_id>/categories")
+def all_categories(user_id):
+    """Show all cards"""
+    user=User.query.get_or_404(user_id)
+    return render_template ('selection.html',user=user)
+
+@app.route("/<int:user_id>/categories/add",methods=["GET","POST"])
+def add_selection(user_id):
+    form=AddSelection()
+    if form.validate_on_submit():
+        name=form.name.data
+        new_selection=Selection(name=name,user_id=user_id)
+        db.session.add(new_selection)
+        db.session.commit()
+        flash(f'{new_selection.name} added', "success")
+        return redirect(f'/{user_id}/categories')
+
+    return render_template('selectionform.html',form=form)
+
+@app.route("/categories/<int:category_id>")
+def category_info(category_id):
+    category=Selection.query.get_or_404(category_id)
+
+    return render_template ('category_info.html',category=category)
+
+
+@app.route("/categories/<int:category_id>/delete",methods=["POST"])
+def delete_selection(category_id):
+    category = Selection.query.get_or_404(category_id)
+    db.session.delete(category)
+    db.session.commit()
+    # flash(f'{category.name} Deleted', "danger")
+    return redirect(f'/{session["user_id"]}/categories')
 
 

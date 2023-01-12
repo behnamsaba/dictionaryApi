@@ -1,0 +1,15 @@
+{%extends 'base.html' %}
+{% block content %}
+<h4>{{category.name.upper()}} words:</h4>
+<form action="/categories/{{category.id}}/delete" method="POST"><button class="btn btn-danger">Delete</button></form>
+
+<ul>
+    {%for x in category.selection_word%}
+        <li><a href="">{{x.word}}</a><form style="display:inline;" action="/" method="POST">
+            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </form></li>
+    {%endfor%}
+</ul>
+
+
+{% endblock %}
