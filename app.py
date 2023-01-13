@@ -93,7 +93,7 @@ def profile(user_id):
     return render_template('profile.html',user=user)
 
 ##########################################################################################################
-#words routes
+#words routes (GENERAL USE, ADD,)
 
 @app.route("/",methods=["GET","POST"])
 def home_page():
@@ -143,7 +143,7 @@ def home_page():
 
     return render_template('home.html',form=form_word,form_selection=form_selection)
 
-@app.route('/users/<int:user_id>/card/new',methods=["POST"])
+@app.route('/<int:user_id>/card/new',methods=["POST"])
 def add_word(user_id):
     card_selection = request.form['selection_list']
     new_word = Word(word=session['answer']['word'], 
@@ -162,11 +162,21 @@ def add_word(user_id):
     flash(f"{new_word.word} Added!", "success")
     return redirect ('/')
 
+@app.route('/card/<int:word_id>/delete/',methods=["POST"])
+def delete_word(word_id):
+    word=Word.query.get_or_404(word_id)
+    db.session.delete(word)
+    flash(f"{word.word} Deleted!", "danger")
+    db.session.commit()
+    return redirect(f'/{session["user_id"]}/categories')
+    
+
+
 
 
 
 #########################################################################################################
-#category routes
+#category routes (ALL, ADD, DELETE)
 
 @app.route("/<int:user_id>/categories")
 def all_categories(user_id):
@@ -201,5 +211,7 @@ def delete_selection(category_id):
     db.session.commit()
     # flash(f'{category.name} Deleted', "danger")
     return redirect(f'/{session["user_id"]}/categories')
+
+#################################################################################################################
 
 

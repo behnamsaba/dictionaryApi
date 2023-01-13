@@ -57,7 +57,7 @@
       <a href="#" class="card-link">Another link</a>
       {% if session['user_id'] %}
       
-      <form method="POST" action="/users/{{session['user_id']}}/card/new">
+      <form method="POST" action="/{{session['user_id']}}/card/new">
 
         {{ form.hidden_tag() }}
       

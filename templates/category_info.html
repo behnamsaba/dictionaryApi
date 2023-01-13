@@ -3,13 +3,25 @@
 <h4>{{category.name.upper()}} words:</h4>
 <form action="/categories/{{category.id}}/delete" method="POST"><button class="btn btn-danger">Delete</button></form>
 
-<ul>
-    {%for x in category.selection_word%}
-        <li><a href="">{{x.word}}</a><form style="display:inline;" action="/" method="POST">
-            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-          </form></li>
-    {%endfor%}
-</ul>
+{%for x in category.selection_word%}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <audio controls id="{{x.id}}" hidden>
+            <source src="{{x.audio}}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="document.getElementById('{{x.id}}').play();"><i class="bi bi-play" style="font-size: 2rem;"></i></button>
+      <h5 class="card-title">{{x.word}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{x.grammer}} | {{x.pronunciation}}</h6>
+      <p class="card-text">{{x.definition}}</p>
+      <p class="card-text">EX:{{x.example}}</p>
+      <form style="display:inline;" action="/card/{{x.id}}/delete" method="POST">
+        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+      </form>
+    </div>
+  </div>
+{%endfor%}
+
 
 
 {% endblock %}
