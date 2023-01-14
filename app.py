@@ -83,12 +83,18 @@ def login():
 
 @app.route('/logout')
 def logout_user():
+    if 'user_id' not in session:
+        return redirect('/')
+
     session.pop("user_id")
     flash("Goodbye!", "info")
     return redirect('/login')
 
-@app.route("/users/<int:user_id>")
+@app.route("/<int:user_id>")
 def profile(user_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     user=User.query.get_or_404(int(user_id))
     return render_template('profile.html',user=user)
 
@@ -102,6 +108,7 @@ def home_page():
     if session.get('user_id'):
         user = User.query.get_or_404(int(session["user_id"]))
         form_selection.selection_list.choices=[(x.id,x.name) for x in user.user_selection]
+        form_selection.selection_list.choices.append(('New','New Category...'))
         
     
 
@@ -145,7 +152,13 @@ def home_page():
 
 @app.route('/<int:user_id>/card/new',methods=["POST"])
 def add_word(user_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     card_selection = request.form['selection_list']
+    if card_selection == 'New':
+        return redirect (f"/{session['user_id']}/categories/add")
+
     new_word = Word(word=session['answer']['word'], 
     definition=session['answer']['definition'],
     grammer=session['answer']['grammer'],
@@ -164,6 +177,9 @@ def add_word(user_id):
 
 @app.route('/card/<int:word_id>/delete/',methods=["POST"])
 def delete_word(word_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     word=Word.query.get_or_404(word_id)
     db.session.delete(word)
     flash(f"{word.word} Deleted!", "danger")
@@ -181,11 +197,17 @@ def delete_word(word_id):
 @app.route("/<int:user_id>/categories")
 def all_categories(user_id):
     """Show all cards"""
+    if "user_id" not in session:
+        return redirect('/login')
+
     user=User.query.get_or_404(user_id)
     return render_template ('selection.html',user=user)
 
 @app.route("/<int:user_id>/categories/add",methods=["GET","POST"])
 def add_selection(user_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     form=AddSelection()
     if form.validate_on_submit():
         name=form.name.data
@@ -199,6 +221,9 @@ def add_selection(user_id):
 
 @app.route("/categories/<int:category_id>")
 def category_info(category_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     category=Selection.query.get_or_404(category_id)
 
     return render_template ('category_info.html',category=category)
@@ -206,6 +231,9 @@ def category_info(category_id):
 
 @app.route("/categories/<int:category_id>/delete",methods=["POST"])
 def delete_selection(category_id):
+    if "user_id" not in session:
+        return redirect('/login')
+
     category = Selection.query.get_or_404(category_id)
     db.session.delete(category)
     db.session.commit()
