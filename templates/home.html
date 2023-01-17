@@ -2,16 +2,8 @@
 
 {% block content %}
 
-<div class="home-hero">
-    <h1>Flashcard Dictionary</h1>
-    <h3>
-      <small class="text-dark">A flashcard or flash card (also known as an index card) is a card bearing information on both sides, which is intended to be used as an aid in memorization.</small>
-    </h3>
-    <hr>
-</div>
 
-
-<p class="lead">Make your words meaningful!</p>
+<p class="lead text-center">Make your words meaningful!</p>
 
 <form method="POST" id="dictionary-form">
 
@@ -29,10 +21,7 @@
   </p>
   {% endfor %}
 
-  <button class="btn btn-success" type="submit">Search</button>
-
 </form>
-
 
 
 {% if answer %}
@@ -54,8 +43,7 @@
       {%endfor%}
       
 
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+
       {% if session['user_id'] %}
       
       <form method="POST" action="/{{session['user_id']}}/card/new">
@@ -83,6 +71,11 @@
   </div>
 
 {%endif%}
+
+<div class="api">
+  <img src="/static/images/world.jpg" class="img-fluid" alt="world">
+  <p class="text-center">As the third most widely spoken language in the world, English is widely spoken and taught in over 118 countries and is commonly used around the world as a trade language or diplomatic language. It is the language of science, aviation, computers, diplomacy and tourism.</p>
+</div>
 
 
 

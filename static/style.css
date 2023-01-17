@@ -1,0 +1,70 @@
+body{
+    background-color: #7c8cbc;
+    font-family: "Roboto";
+}
+
+
+#answer{
+    color: transparent;
+    text-shadow: 0 0 8px #000;
+    transition: 0.5s;
+    opacity: 0.1;
+    background-color: gray;
+}
+
+#answer:hover{
+    color: black;
+    text-shadow: 0 0 0;
+    opacity: 1;
+    background-color: transparent;
+}
+
+#dictionary-form{
+    text-align: center;
+    font-weight: bold;    
+
+}
+
+
+.card{
+    background-color: #7c8cbc;
+    border-radius: 5%;
+}
+
+em{
+    font-size: 2rem;
+    text-shadow: -1px 1px black, 0 1px black, 1px 0 black, 0 -1px black;
+    font-family: 'Roboto';
+    
+
+}
+
+
+.img-fluid{
+    border-radius: 20%;
+    height: 15rem;
+    width: auto;
+}
+
+footer{
+    background-color: #3f51b5;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+
+
+}
+
+nav.navbar{
+    background-color: #3f51b5;
+}
+
+.api{
+    display: flex;
+    padding: 20px;
+    color: white;
+    font-weight: bold;
+}
+

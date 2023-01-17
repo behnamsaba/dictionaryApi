@@ -4,15 +4,20 @@
   <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
 
 </head>
 
 <body>
-  <nav class="navbar navbar-light bg-primary justify-content-between ">
+  <nav class="navbar navbar-light justify-content-between ">
     <div class="container">
       <a href="/" class="navbar-brand text-light">Vocab Memorizer</a>
       <ul class="nav navbar-nav flex-row float-right">
+        <li class="nav-item">
+          <a class="nav-link pr-3 text-light" href="/api/get-word">Dictionary</a>
+        </li>
         {% if session['user_id'] %}
         <li class="nav-item">
           <a class="nav-link pr-3 text-light" href="/logout">Logout</a>
@@ -47,10 +52,76 @@
   <div class="container">
     <h4>New to Vocab Memorizer?</h4>
     <p>Sign up now to get your own personalized features!</p>
-    <a href="/signup" class="btn btn-primary">Sign up</a>
+    <a href="/signup" class="btn btn-primary">Sign up for free</a>
   </div>
   {%endif%}
 
+
+  <footer class="text-center text-white">
+    <!-- Grid container -->
+    <div class="container">
+      <!-- Section: Links -->
+      <section class="mt-5">
+        <!-- Grid row-->
+        <div class="row text-center d-flex justify-content-center pt-5">
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="https://github.com/behnamsaba/" class="text-white">About us</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="https://www.springboard.com/" class="text-white">Info</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="mailto: @behnams71@gmail.com" class="text-white">Contact</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row-->
+      </section>
+      <!-- Section: Links -->
+
+      <hr class="my-5" />
+
+      <!-- Section: Text -->
+      <section class="mb-5">
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-6">
+            <p>
+              Capstone Project for Springboard!
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Section: Text -->
+
+      <!-- Section: Social -->
+      <section class="text-center mb-5">
+        <a href="mailto: @behnams71@gmail.com" class="text-white me-4">
+          <i class="fab fa-google"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/behnam-saba-979915134/" class="text-white me-4">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://github.com/behnamsaba/" class="text-white me-4">
+          <i class="fab fa-github"></i>
+        </a>
+      </section>
+      <!-- Section: Social -->
+    </div>
+    <!-- Grid container -->
+  <a href="https://dictionaryapi.dev/">&copy; Dictionary API</a>
+  </footer>
+  <!-- Footer -->
+</div>
+  
 
 </body>
 

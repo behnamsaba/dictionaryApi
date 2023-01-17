@@ -96,13 +96,20 @@ def profile(user_id):
         return redirect('/login')
 
     user=User.query.get_or_404(int(user_id))
-    return render_template('profile.html',user=user)
+    words=[word.word_id for word in user.user_words]
+    all_words = [Word.query.get(x) for x in words]
+    return render_template('profile.html',user=user,all_words=all_words)
 
 ##########################################################################################################
 #words routes (GENERAL USE, ADD,)
 
-@app.route("/",methods=["GET","POST"])
+@app.route('/')
 def home_page():
+    return render_template('homepage.html')
+
+
+@app.route("/api/get-word",methods=["GET","POST"])
+def api_search():
     form_word=SearchWord()
     form_selection=AllSelection()
     if session.get('user_id'):
@@ -122,8 +129,21 @@ def home_page():
 
         try:
             word=result[0]['word']
-            audio=result[0]['phonetics'][0]['audio']
-            pronunciation=result[0]['phonetics'][0].get('text','')
+            audio=""
+            
+            audio2=result[0]['phonetics']
+            for x in audio2:
+                if x['audio'] != '':
+                    audio=x['audio']
+                else:
+                    audio=''
+
+            if len(result[0]['phonetics']) != 0:
+                pronunciation=result[0]['phonetics'][0].get('text','')
+            else:
+                pronunciation= ''
+            
+            
             definition=result[0]['meanings'][0]['definitions'][0]['definition']
             synonyms=result[0]['meanings'][0]['synonyms']
             grammer=result[0]['meanings'][0]['partOfSpeech']
@@ -141,7 +161,8 @@ def home_page():
             session['answer']=answer
             
         except:
-            pass
+            flash('Word Not Found!', 'danger')
+            return redirect('/api/get-word')
 
         return render_template('home.html',form=form_word,answer=answer,form_selection=form_selection)
 

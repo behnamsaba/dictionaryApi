@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import InputRequired, Length, DataRequired
 
 class SearchWord(FlaskForm):
-    search = StringField("Enter Word", validators=[InputRequired()])
+    search = StringField("Enter Word", validators=[InputRequired()], render_kw={"placeholder": "Search English"})
 
 class AddSelection(FlaskForm):
     name = StringField("Selection Name", validators=[InputRequired()])
@@ -21,4 +21,4 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=6)])
 
 class AllSelection(FlaskForm):
-    selection_list= SelectField('Categories:')
+    selection_list= SelectField('Select category to save:')

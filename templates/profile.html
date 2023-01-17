@@ -2,14 +2,41 @@
 {% block content %}
 <h4>Account Details:</h4>
 
-<ul>
-    <li>Name: {{user.first_name}}</li>
-    <li>Last Name: {{user.last_name}}</li>
-    <li>Email: {{user.email}}</li>
+<ul class="list-group-item">
+    <li class="list-group-item"><b>{{user.first_name}}</b></li>
+    <li class="list-group-item"><b>{{user.last_name}}</b></li>
+    <li class="list-group-item"><b>{{user.email}}</b></li>
 </ul>
 
-<form action="{{user.username}}/feedback/add"><button class="btn btn-info">New Group</button></form>
-<form action="{{user.username}}/delete" method="POST"><button class="btn btn-danger">Delete User</button></form>
+<a href="/api/get-word"><button class="btn btn-primary">Search Dictionary</button></a>
+<a href="/{{session['user_id']}}/categories"><button class="btn btn-info">Categories</button></a>
 <hr>
+
+<h3 class="lead text-center">All Saved Words (Hover to display)</h3>
+<ul class="list-group">
+{%for word in all_words%}
+<li class="list-group-item">
+<div class="p-2 bd-highlight">
+    <div class="card-body">
+        <audio controls id="{{word.id}}" hidden>
+            <source src="{{word.audio}}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="document.getElementById('{{word.id}}').play();"><i class="bi bi-play" style="font-size: 2rem;"></i></button>
+      <h5 class="card-title">{{word.word}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted" id="answer">{{word.grammer}} | {{word.pronunciation}}</h6>
+      <p class="card-text" id="answer">{{word.definition}}</p>
+      <p class="card-text" id="answer">{{word.example}}</p>
+      <form style="display:inline;" action="/card/{{word.id}}/delete" method="POST">
+        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+      </form>
+    </div>
+  </div>
+</li>
+{%endfor%}
+</ul>
+</div>
+
+
 
 {% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html'  %}
+{% block content %}
+<div class="home-hero text-center">
+    <h1>Flashcard Dictionary</h1>
+    <h3>
+      <small class="text-dark-center">A flashcard or flash card (also known as an index card) is a card bearing information on both sides, which is intended to be used as an aid in memorization.</small>
+    </h3>
+    <hr>
+</div>
+
+<div class="card text-bg-dark">
+    <img src="static/images/self.jpg" class="card-img" alt="flash-card" id="home-image">
+    <div class="card-img-overlay">
+      <h5 class="card-title h3 pr-3 text-white"><em>The Effectiveness of Flashcards</em></h5>
+      <p class="h4 text-white"><em>Flashcards are effective because they promote active recall in your brain, which is the process by which we retrieve a memory. Seeing a term and then actively attempting to remember the meaning helps to move it from short-term to long-term memory</em></p>
+    </div>
+</div>
+<hr>
+
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    <div class="col">
+      <img src="/static/images/ielts.jpg" class="img-fluid" alt="ielts">
+    </div>
+    <div class="col">
+      <img src="/static/images/toefl.jpg" class="img-fluid" alt="toefl">
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
