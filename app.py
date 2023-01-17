@@ -135,8 +135,6 @@ def api_search():
             for x in audio2:
                 if x['audio'] != '':
                     audio=x['audio']
-                else:
-                    audio=''
 
             if len(result[0]['phonetics']) != 0:
                 pronunciation=result[0]['phonetics'][0].get('text','')
