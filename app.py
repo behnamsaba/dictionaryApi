@@ -259,6 +259,3 @@ def delete_selection(category_id):
     db.session.commit()
     # flash(f'{category.name} Deleted', "danger")
     return redirect(f'/{session["user_id"]}/categories')
-
-
-
